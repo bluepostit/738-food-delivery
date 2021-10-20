@@ -41,6 +41,7 @@ class Router
   end
 
   def show_rider_menu
+    puts
     puts '---- 🛴 Restaurant 🛴 -----'
     puts "1. List my undelivered orders"
     puts "2. Mark an order as delivered"
