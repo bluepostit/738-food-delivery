@@ -1,8 +1,9 @@
 class Router
-  def initialize(meals_controller, customers_controller, sessions_controller)
+  def initialize(meals_controller, customers_controller, sessions_controller, orders_controller)
     @meals_controller = meals_controller
     @customers_controller = customers_controller
     @sessions_controller = sessions_controller
+    @orders_controller = orders_controller
   end
 
   def run
@@ -31,6 +32,7 @@ class Router
   end
 
   def dispatch(action)
+    puts `clear`
     if @employee.manager?
       dispatch_manager_action(action)
     else
@@ -52,6 +54,8 @@ class Router
     puts "2. Add a meal"
     puts "3. List all customers"
     puts "4. Add a customer"
+    puts "5. Add an order"
+    puts "6. List all undelivered orders"
     puts "8. Sign out"
     puts "9. Exit"
   end
@@ -63,12 +67,13 @@ class Router
   end
 
   def dispatch_manager_action(action)
-    puts `clear`
     case action
     when 1 then @meals_controller.list
     when 2 then @meals_controller.add
     when 3 then @customers_controller.list
     when 4 then @customers_controller.add
+    when 5 then @orders_controller.add
+    when 6 then @orders_controller.list_undelivered_orders
     when 8 then @employee = nil
     when 9 then exit
     else puts 'Please try again'
@@ -78,8 +83,8 @@ class Router
   def dispatch_rider_action(action)
     puts `clear`
     case action
-    when 1 then puts 'To be implemented...'
-    when 2 then puts 'To be implemented...'
+    when 1 then @orders_controller.list_my_orders(@employee)
+    when 2 then @orders_controller.mark_as_delivered(@employee)
     when 8 then @employee = nil
     when 9 then exit
     else puts 'Please try again'

@@ -23,6 +23,11 @@ class OrderRepository
     @orders.reject { |order| order.delivered? }
   end
 
+  def mark_as_delivered(order)
+    order.deliver!
+    save_csv
+  end
+
   private
 
   def load_csv
@@ -34,10 +39,12 @@ class OrderRepository
       row[:id] = row[:id].to_i
       row[:meal] = @meal_repository.find(row[:meal_id].to_i)
       row[:customer] = @customer_repository.find(row[:customer_id].to_i)
-      row[:employee] = @employee_repository.find(row[:employee_id].to_i)
+      employee = @employee_repository.find(row[:employee_id].to_i)
+      row[:employee] = employee
       row[:delivered] = row[:delivered] == 'true'
       order = Order.new(row)
       @orders << order
+      employee.add_order(order)
     end
     @next_id = @orders.last.id + 1 unless @orders.empty?
   end
