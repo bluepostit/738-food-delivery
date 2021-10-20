@@ -1,9 +1,11 @@
-require_relative 'app/models/meal'
-require_relative 'app/repositories/meal_repository'
+require_relative 'app/models/employee'
+require_relative 'app/repositories/employee_repository'
 
-ramen = Meal.new(name: 'ramen', price: 4)
-puts "#{ramen.name} - #{ramen.price}"
-p ramen
+sheila = Employee.new(username: 'sheila', password: 'pass', role: 'rider')
+billy = Employee.new(username: 'billy', password: 'pass', role: 'manager')
 
-meal_repository = MealRepository.new('data/meals.csv')
-p meal_repository.all
+puts "#{sheila.username}/#{sheila.password} - #{sheila.role}"
+puts "#{billy.username}/#{billy.password} - #{billy.role}"
+
+employee_repository = EmployeeRepository.new('data/employees.csv')
+p employee_repository.all
