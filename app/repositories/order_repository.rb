@@ -30,21 +30,26 @@ class OrderRepository
 
   private
 
+  def build_order(row)
+    row[:id] = row[:id].to_i
+    row[:meal] = @meal_repository.find(row[:meal_id].to_i)
+    row[:customer] = @customer_repository.find(row[:customer_id].to_i)
+    employee = @employee_repository.find(row[:employee_id].to_i)
+    row[:employee] = employee
+    row[:delivered] = row[:delivered] == 'true'
+    order = Order.new(row)
+    employee.add_order(order)
+    order
+  end
+
   def load_csv
     csv_options = {
       headers: :first_row,
       header_converters: :symbol
     }
     CSV.foreach(@csv_file_path, csv_options) do |row|
-      row[:id] = row[:id].to_i
-      row[:meal] = @meal_repository.find(row[:meal_id].to_i)
-      row[:customer] = @customer_repository.find(row[:customer_id].to_i)
-      employee = @employee_repository.find(row[:employee_id].to_i)
-      row[:employee] = employee
-      row[:delivered] = row[:delivered] == 'true'
-      order = Order.new(row)
+      order = build_order(row)
       @orders << order
-      employee.add_order(order)
     end
     @next_id = @orders.last.id + 1 unless @orders.empty?
   end
@@ -53,7 +58,8 @@ class OrderRepository
     CSV.open(@csv_file_path, 'wb') do |csv|
       csv << %w[id meal_id customer_id employee_id delivered]
       @orders.each do |order|
-        csv << [order.id, order.meal.id, order.customer.id, order.employee.id, order.delivered?]
+        csv << [order.id, order.meal.id, order.customer.id,
+                order.employee.id, order.delivered?]
       end
     end
   end

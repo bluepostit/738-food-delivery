@@ -50,6 +50,7 @@ class Router
   end
 
   def show_manager_menu
+    puts
     puts '---- 💼 Restaurant 💼 -----'
     puts "1. List all meals"
     puts "2. Add a meal"
@@ -75,9 +76,8 @@ class Router
     when 4 then @customers_controller.add
     when 5 then @orders_controller.add
     when 6 then @orders_controller.list_undelivered_orders
-    when 8 then @employee = nil
+    when 8 then sign_out
     when 9 then exit
-    else puts 'Please try again'
     end
   end
 
@@ -86,14 +86,18 @@ class Router
     case action
     when 1 then @orders_controller.list_my_orders(@employee)
     when 2 then @orders_controller.mark_as_delivered(@employee)
-    when 8 then @employee = nil
+    when 8 then sign_out
     when 9 then exit
     else puts 'Please try again'
     end
   end
 
-  def exit
+  def sign_out
     @employee = nil
+  end
+
+  def exit
+    sign_out
     @running = false
   end
 end
