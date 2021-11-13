@@ -1,5 +1,5 @@
 class Employee
-  attr_reader :username, :password, :role
+  attr_reader :username, :password, :role, :orders
   attr_accessor :id
 
   def initialize(attributes = {})
@@ -7,6 +7,7 @@ class Employee
     @username = attributes[:username]
     @password = attributes[:password]
     @role = attributes[:role]
+    @orders = []
   end
 
   def manager?
@@ -15,5 +16,13 @@ class Employee
 
   def rider?
     @role == 'rider'
+  end
+
+  def add_order(order)
+    @orders << order
+  end
+
+  def undelivered_orders
+    @orders.reject { |order| order.delivered? }
   end
 end

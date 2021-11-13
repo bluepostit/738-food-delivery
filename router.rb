@@ -33,6 +33,7 @@ class Router
   end
 
   def dispatch(action)
+    puts `clear`
     if @employee.manager?
       dispatch_manager_action(action)
     else
@@ -55,6 +56,7 @@ class Router
     puts "3. List all customers"
     puts "4. Add a customer"
     puts "5. List all undelivered orders"
+    puts "6. Add a new order"
     puts "8. Sign out"
     puts "9. Exit"
   end
@@ -66,24 +68,27 @@ class Router
   end
 
   def dispatch_manager_action(action)
-    puts `clear`
     case action
     when 1 then @meals_controller.list
     when 2 then @meals_controller.add
     when 3 then @customers_controller.list
     when 4 then @customers_controller.add
-    when 5 then @orders_controller.list_all_undelivered
-    when 8 then @employee = nil
-    when 9 then exit
-    else puts 'Please try again'
+    when 5 then @orders_controller.list_undelivered_orders
+    when 6 then @orders_controller.add
+    else dispatch_common_actions(action)
     end
   end
 
   def dispatch_rider_action(action)
-    puts `clear`
     case action
-    when 1 then puts 'To be implemented...'
-    when 2 then puts 'To be implemented...'
+    when 1 then @orders_controller.list_my_orders(@employee)
+    when 2 then @orders_controller.mark_as_delivered(@employee)
+    else dispatch_common_actions(action)
+    end
+  end
+
+  def dispatch_common_actions(action)
+    case action
     when 8 then @employee = nil
     when 9 then exit
     else puts 'Please try again'

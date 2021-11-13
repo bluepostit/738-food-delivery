@@ -4,7 +4,7 @@ class Order
 
   def initialize(attributes = {})
     @id = attributes[:id]
-    @delivered = attributes[:delivered]
+    @delivered = attributes[:delivered] || false
     @meal = attributes[:meal]
     @customer = attributes[:customer]
     @employee = attributes[:employee]
@@ -12,5 +12,9 @@ class Order
 
   def delivered?
     @delivered
+  end
+
+  def deliver!
+    @delivered = true
   end
 end
